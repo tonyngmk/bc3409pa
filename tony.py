@@ -59,7 +59,16 @@ st.image('https://raw.githubusercontent.com/tonyngmk/free_storage/master/Images/
 st.write('''<h1 align=center><font color='Blue'>BC3409</font> - 
 <font color='red'>AI in Accounting & Finance</font>''', unsafe_allow_html=True)
 
-use_case = st.sidebar.selectbox("Select use cases", 
+# use_case = st.sidebar.selectbox("Select use cases", 
+# ("GBM",
+# "XGBoost"
+# ))
+
+
+st.write("<h2 align=center>Airbnb Optimal Price Recommender</h2>", unsafe_allow_html=True)
+'''A key part to address the problem of this assignment is to advise property listers of an ‘optimum price’ value given a set of input variables in their pricing decisions. 
+This web app provides a peek at the high interpretability and explainability of using SHAP for both GBM and XGBoost. '''
+use_case = st.radio("Select model:", 
 ("GBM",
 "XGBoost"
 ))
@@ -69,13 +78,13 @@ _, _, X_train, y_train, X_test, y_test, _, df_test = load_data()
 # session_state = SessionState.get(n=0)
 
 if use_case == "GBM":
-    st.write("<h2 align=center>Airbnb Optimal Price Recommender - {}</h2>".format(use_case), unsafe_allow_html=True)
+    st.write("<h2 align=center>{}</h2>".format(use_case), unsafe_allow_html=True)
     # with st.spinner('Do allow approximately 5s for GBM to be fitted.'):
     f = open("gbmBase.txt")
     gbmBaseValue = float(f.readlines()[0])
     f.close()
     gbmVals = np.load("gbmValues.npy")
-    # st.success('Done!')
+    
     # if st.button('Start Training'):
     # with st.spinner('Waiting for models to be fitted'):
         # model_gb = GradientBoostingRegressor(n_estimators = 220).fit(X_train, y_train.values.ravel())
@@ -93,11 +102,9 @@ if use_case == "GBM":
                 # model_gb = GradientBoostingRegressor(n_estimators = 220).fit(X_train, y_train.values.ravel())
                 # explainer = shap.TreeExplainer(model_gb)
                 # shap_values = explainer.shap_values(X_test)
-    '''A key part to address the problem of this assignment is to advise property listers of an ‘optimum price’ value given a set of input variables in their pricing decisions. 
-    This web app provides a peek at the high interpretability and explainability of using SHAP for both GBM and XGBoost. '''
 
     '###### *We will be using cached predictions to conserve CPU usage (Heroku dynos) and avoid long train/fitting time.*'
-    
+    st.success('Done!')
     "#### Reproducible code:"
     ''' 
     ~~~
@@ -129,8 +136,9 @@ if use_case == "GBM":
     results
     # st_shap(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]))
     # st.pyplot(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]),bbox_inches='tight',dpi=300,pad_inches=0)
-    st.pyplot(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:],matplotlib=True,show=False),bbox_inches='tight',dpi=300,pad_inches=0)
-    plt.clf()
+    with st.spinner('Plotting, please wait for approximately 3 seconds...'):
+        st.pyplot(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:],matplotlib=True,show=False),bbox_inches='tight',dpi=300,pad_inches=0)
+        plt.clf()
     "**Breakdown:**"
     breakdownCols = ["Base value"] + X_test.columns.tolist()
     breakdownVals = [gbmBaseValue] + list(gbmVals[n,:])
@@ -151,11 +159,13 @@ if use_case == "GBM":
     # shap_values = explainer.shap_values(X_test)
 
 elif use_case == "XGBoost":
-    st.write("<h2 align=center>Airbnb Optimal Price Recommender - {}</h2>".format(use_case), unsafe_allow_html=True)
-    '''A key part to address the problem of this assignment is to advise property listers of an ‘optimum price’ value given a set of input variables in their pricing decisions. 
-    This web app provides a peek at the high interpretability and explainability of using SHAP for both GBM and XGBoost. '''
-
+    st.write("<h2 align=center>{}</h2>".format(use_case), unsafe_allow_html=True)
+    f = open("xgboostBase.txt")
+    xgbBaseValue = float(f.readlines()[0])
+    f.close()
+    xgbVals = np.load("xgboostValues.npy")
     '###### *We will be using cached predictions to conserve CPU usage (Heroku dynos) and avoid long train/fitting time.*'
+    st.success('Done!')
     # with st.spinner('Do allow approximately 60s for XGBoost model to be fitted.'):
         # lr = 0.032
         # n_folds = 10
@@ -170,11 +180,7 @@ elif use_case == "XGBoost":
         # xgb_model.fit(X_train, y_train)
         # explainer = shap.TreeExplainer(xgb_model)
         # shap_values = explainer.shap_values(X_test)
-    f = open("xgboostBase.txt")
-    xgbBaseValue = float(f.readlines()[0])
-    f.close()
-    xgbVals = np.load("xgboostValues.npy")
-    st.success('Done!')
+
     "#### Reproducible code:"
     ''' 
     ~~~
@@ -183,11 +189,11 @@ elif use_case == "XGBoost":
     numerical_features =  X_train.select_dtypes(exclude=['object'])
     kf = KFold(n_folds, shuffle=True, random_state = 2020).get_n_splits(numerical_features)
     xgb_model = xgboost.XGBRegressor(objective ='reg:squarederror',\
-                                            subsample = 0.6, \
-                                            reg_lambda = 2.5, n_estimators  = 75, max_depth = 13, \
-                                            learning_rate = lr,\
-                                            gamma = 0, colsample_bytree = .9,\
-                                            early_stopping=5)
+subsample = 0.6, \
+reg_lambda = 2.5, n_estimators  = 75, max_depth = 13, \
+learning_rate = lr,\
+gamma = 0, colsample_bytree = .9,\
+early_stopping=5)
     xgb_model.fit(X_train, y_train)
     explainer = shap.TreeExplainer(xgb_model)
     shap_values = explainer.shap_values(X_test)
@@ -203,8 +209,9 @@ elif use_case == "XGBoost":
                   index = ["Test Case Result: {}".format(n)])
     results
     # st_shap(shap.force_plot(xgbBaseValue, xgbVals[n,:], X_test.iloc[n,:]))
-    st.pyplot(shap.force_plot(xgbBaseValue, xgbVals[n,:], X_test.iloc[n,:],matplotlib=True,show=False),bbox_inches='tight',dpi=300,pad_inches=0)
-    plt.clf()
+    with st.spinner('Plotting, please wait for approximately 3 seconds...'):
+        st.pyplot(shap.force_plot(xgbBaseValue, xgbVals[n,:], X_test.iloc[n,:],matplotlib=True,show=False),bbox_inches='tight',dpi=300,pad_inches=0)
+        plt.clf()
     "**Breakdown:**"
     breakdownCols = ["Base value"] + X_test.columns.tolist()
     breakdownVals = [xgbBaseValue] + list(xgbVals[n,:])
