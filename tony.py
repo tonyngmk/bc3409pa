@@ -50,9 +50,9 @@ def load_data():
     # shap_values = explainer.shap_values(X_test)
     # return xgb_model
 
-def st_shap(plot, height=None):
-    shap_html = f"<head>{shap.getjs()}</head><body>{plot.html()}</body>"
-    components.html(shap_html, height=height)
+# def st_shap(plot, height=None):
+    # shap_html = f"<head>{shap.getjs()}</head><body>{plot.html()}</body>"
+    # components.html(shap_html, height=height)
 
 st.image('https://raw.githubusercontent.com/tonyngmk/free_storage/master/Images/NTU%20Logo.png', width = 750)
 st.write('''<h1 align=center><font color='Blue'>BC3409</font> - 
