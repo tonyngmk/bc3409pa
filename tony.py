@@ -1,5 +1,5 @@
 import streamlit as st
-import streamlit.components.v1 as components
+# import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -128,7 +128,9 @@ if use_case == "GBM":
                   index = ["Test Case Result: {}".format(n)])
     results
     # st_shap(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]))
-    st.pyplot(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]),bbox_inches='tight',dpi=300,pad_inches=0)
+    # st.pyplot(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]),bbox_inches='tight',dpi=300,pad_inches=0)
+    st.pyplot(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:],matplotlib=True,show=False),bbox_inches='tight',dpi=300,pad_inches=0)
+    plt.clf()
     "**Breakdown:**"
     breakdownCols = ["Base value"] + X_test.columns.tolist()
     breakdownVals = [gbmBaseValue] + list(gbmVals[n,:])
@@ -200,7 +202,9 @@ elif use_case == "XGBoost":
                   "Residual MAE": abs(y_test.iloc[n].values.tolist()[0] - (xgbBaseValue + xgbVals[n,:].sum()))},
                   index = ["Test Case Result: {}".format(n)])
     results
-    st_shap(shap.force_plot(xgbBaseValue, xgbVals[n,:], X_test.iloc[n,:]))
+    # st_shap(shap.force_plot(xgbBaseValue, xgbVals[n,:], X_test.iloc[n,:]))
+    st.pyplot(shap.force_plot(xgbBaseValue, xgbVals[n,:], X_test.iloc[n,:],matplotlib=True,show=False),bbox_inches='tight',dpi=300,pad_inches=0)
+    plt.clf()
     "**Breakdown:**"
     breakdownCols = ["Base value"] + X_test.columns.tolist()
     breakdownVals = [xgbBaseValue] + list(xgbVals[n,:])
