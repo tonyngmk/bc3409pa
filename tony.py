@@ -1,10 +1,10 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
 # from sklearn.ensemble import GradientBoostingRegressor
 # import xgboost
 import shap
-import streamlit.components.v1 as components
 # from sklearn.model_selection import KFold
 # import SessionState
 
@@ -127,6 +127,7 @@ if use_case == "GBM":
                   index = ["Test Case Result: {}".format(n)])
     results
     st_shap(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]))
+    # st.pyplot(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]),bbox_inches='tight',dpi=300,pad_inches=0)
     "**Breakdown:**"
     breakdownCols = ["Base value"] + X_test.columns.tolist()
     breakdownVals = [gbmBaseValue] + list(gbmVals[n,:])
