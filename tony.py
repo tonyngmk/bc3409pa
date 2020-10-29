@@ -126,8 +126,8 @@ if use_case == "GBM":
                   "Residual MAE": abs(y_test.iloc[n].values.tolist()[0] - (gbmBaseValue + gbmVals[n,:].sum()))},
                   index = ["Test Case Result: {}".format(n)])
     results
-    st_shap(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]))
-    # st.pyplot(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]),bbox_inches='tight',dpi=300,pad_inches=0)
+    # st_shap(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]))
+    st.pyplot(shap.force_plot(gbmBaseValue, gbmVals[n,:], X_test.iloc[n,:]),bbox_inches='tight',dpi=300,pad_inches=0)
     "**Breakdown:**"
     breakdownCols = ["Base value"] + X_test.columns.tolist()
     breakdownVals = [gbmBaseValue] + list(gbmVals[n,:])
