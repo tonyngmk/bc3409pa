@@ -56,8 +56,8 @@ def load_data():
     # components.html(shap_html, height=height)
 
 st.image('https://raw.githubusercontent.com/tonyngmk/free_storage/master/Images/NTU%20Logo.png', width = 750)
-st.write('''<h1 align=center><font color='Blue'>BC3409</font> - 
-<font color='red'>AI in Accounting & Finance</font>''', unsafe_allow_html=True)
+st.write('''<h1 align=center><font color='Blue'>NTU / NBS</font> - 
+<font color='red'>SINGAPORE</font>''', unsafe_allow_html=True)
 
 # use_case = st.sidebar.selectbox("Select use cases", 
 # ("GBM",
